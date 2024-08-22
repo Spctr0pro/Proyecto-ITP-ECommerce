@@ -14,7 +14,8 @@ import ApiUserRouter from "./routes/api/user.routes.js";
 import ApiAuthRouter from "./routes/api/auth.routes.js";
 import CartRouter from "./routes/carts.routes.js";
 
-import ApiCartRouter from "./routes/api/cart.routes.js";
+// import ApiCartRouter from "./routes/api/cart.routes.js";
+import ApiCartRouter from "./routers/api/cart.router.js";
 import ApiProductRouter from "./routes/api/product.routes.js";
 import HomeRouter from "./routes/home.routes.js";
 

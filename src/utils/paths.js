@@ -12,6 +12,7 @@ const paths = {
     images: path.join(ROOT_PATH, "src", "public", "images"),
     views: path.join(ROOT_PATH, "src", "views"),
     partials: path.join(ROOT_PATH, "src", "views", "partials"),
+    files: path.join(path.dirname(""), "src", "daos", "fs", "files"),
 };
 
 export default paths;

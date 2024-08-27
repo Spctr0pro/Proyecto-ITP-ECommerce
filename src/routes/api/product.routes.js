@@ -1,6 +1,6 @@
 
 import BaseRouter from "../base.router.js";
-import productManager from "../../managers/product.manager.js";
+import productManager from "../../daos/product.dao.js";
 import { USER, USER_PREMIUM, ADMIN, AUTHENTICATED} from "../../constants/roles.constant.js";
 
 export default class ProductRouter extends BaseRouter {

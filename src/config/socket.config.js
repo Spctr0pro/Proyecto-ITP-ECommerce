@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import ProductManager from "../managers/product.manager.js";
+import ProductManager from "../daos/product.dao.js";
 import { writeFile } from "../utils/fileSystem.js";
 import paths from "../utils/paths.js";
 import { generateNameForFile } from "../utils/random.js";

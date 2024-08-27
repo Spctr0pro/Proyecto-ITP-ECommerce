@@ -16,8 +16,11 @@ export default class CartRouter extends BaseRouter{
         router.get("/:id", (req, res) => this.#cartController.getOneById(req, res));
         router.post("/", (req, res) => this.#cartController.create(req, res));
         router.put("/:id", (req, res) => this.#cartController.update(req, res));
+        router.put("/:cid/products/:pid", (req, res) => this.#cartController.update(req, res));
         router.delete("/:id", (req, res) => this.#cartController.delete(req, res));
-
+        router.delete("/:cid/products/:pid", (req, res) => this.#cartController.delete(req, res)); 
+        router.delete("/:cid/products", (req, res) => this.#cartController.delete(req, res)); 
+                
         router.use((error, req, res, next) => {
             res.sendError(error);
         })

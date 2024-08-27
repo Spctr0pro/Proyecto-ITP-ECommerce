@@ -1,6 +1,6 @@
 
 import BaseRouter from "../base.router.js";
-import UserManager from "../../managers/user.manager.js";
+import UserManager from "../../daos/user.dao.js";
 import { USER, USER_PREMIUM, ADMIN, AUTHENTICATED } from "../../constants/roles.constant.js";
 
 export default class UserRouter extends BaseRouter {

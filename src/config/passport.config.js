@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
-import UserManager from "../managers/user.manager.js";
+import UserManager from "../daos/user.dao.js";
 
 const userManager = new UserManager();
 

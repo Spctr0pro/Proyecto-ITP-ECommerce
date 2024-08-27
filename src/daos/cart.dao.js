@@ -1,4 +1,4 @@
-import CartModel from "../models/cart.model.js"
+import CartModel from "./mongodb/models/cart.model.js"
 
 export default class CARTDAO{
     #CartModel;

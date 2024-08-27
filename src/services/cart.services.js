@@ -1,7 +1,7 @@
 import { ERROR_NOT_FOUND_ID } from "../constants/messages.constant.js";
 import CartDAO from "../daos/cart.dao.js"
 
-export default class CARTService{
+export default class CartService{
     #CartDAO;
 
     constructor(){

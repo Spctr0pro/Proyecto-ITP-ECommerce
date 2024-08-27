@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import passport from "passport";
-import UserManager from "../managers/user.manager.js";
+import UserManager from "../daos/user.dao.js";
 import { JWT_TRANSLATIONS } from "../constants/messages.constant.js";
 
 const userManager = new UserManager();

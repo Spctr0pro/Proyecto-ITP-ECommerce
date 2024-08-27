@@ -8,16 +8,16 @@ import { config as configHandlebars } from "./config/handlebars.config.js";
 import { config as configPassport } from "./config/passport.config.js";
 import { config as configSocket } from "./config/socket.config.js";
 
-import LoginRouter from "./routes/login.routes.js";
-import ProductRouter from "./routes/products.routes.js";
-import ApiUserRouter from "./routes/api/user.routes.js";
+// import LoginRouter from "./routes/login.routes.js";
+// import ProductRouter from "./routes/products.routes.js";
+import ApiUserRouter from "./routers/api/user.router.js";
 import ApiAuthRouter from "./routes/api/auth.routes.js";
-import CartRouter from "./routes/carts.routes.js";
+// import CartRouter from "./routes/carts.routes.js";
 
 // import ApiCartRouter from "./routes/api/cart.routes.js";
 import ApiCartRouter from "./routers/api/cart.router.js";
-import ApiProductRouter from "./routes/api/product.routes.js";
-import HomeRouter from "./routes/home.routes.js";
+import ApiProductRouter from "./routers/api/product.router.js";
+// import HomeRouter from "./routes/home.routes.js";
 
 const server = express();
 // Decodificadores del BODY
@@ -43,10 +43,10 @@ configPassport(server);
 connectDB();
 
 // Enrutadores
-server.use("/session", new LoginRouter().getRouter())
-server.use("/products", new ProductRouter().getRouter());
-server.use("/carts", new CartRouter().getRouter());
-server.use("/", new HomeRouter().getRouter());
+// server.use("/session", new LoginRouter().getRouter())
+// server.use("/products", new ProductRouter().getRouter());
+// server.use("/carts", new CartRouter().getRouter());
+// server.use("/", new HomeRouter().getRouter());
 
 server.use("/api/auth", new ApiAuthRouter().getRouter());
 server.use("/api/carts", new ApiCartRouter().getRouter());

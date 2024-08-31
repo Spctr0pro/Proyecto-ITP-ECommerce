@@ -1,5 +1,7 @@
 import BaseRouter from "../base.router.js";
 import ProductController from "../../controllers/product.controller.js";
+import { ADMIN, STANDARD } from "../../constants/roles.constant.js";
+import uploader from "../../utils/uploader.js";
 
 export default class ProductRouter extends BaseRouter{
     #productController;
@@ -12,11 +14,11 @@ export default class ProductRouter extends BaseRouter{
     initialize(){
         const router = this.getRouter();
 
-        router.get("/", (req, res) => this.#productController.getAll(req, res));
-        router.get("/:id", (req, res) => this.#productController.getOneById(req, res));
-        router.post("/", (req, res) => this.#productController.create(req, res));
-        router.put("/:id", (req, res) => this.#productController.update(req, res));
-        router.delete("/:id", (req, res) => this.#productController.delete(req, res));
+        this.addGetRoute("/", [STANDARD],  (req, res) => this.#productController.getAll(req, res));
+        this.addGetRoute("/:id", [STANDARD],  (req, res) => this.#productController.getOneById(req, res));
+        this.addPostRoute("/", [STANDARD], uploader.single("file"), (req, res) => this.#productController.create(req, res));
+        this.addPutRoute("/:id", [STANDARD], uploader.single("file"), (req, res) => this.#productController.update(req, res));
+        this.addDeleteRoute("/:id", [ADMIN],  (req, res) => this.#productController.delete(req, res));
 
         router.use((error, req, res, next) => {
             res.sendError(error);

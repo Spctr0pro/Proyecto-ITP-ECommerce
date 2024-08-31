@@ -1,10 +1,10 @@
 import { Server } from "socket.io";
-import ProductManager from "../daos/product.dao.js";
+import ProductService from "../services/product.services.js";
 import { writeFile } from "../utils/fileSystem.js";
 import paths from "../utils/paths.js";
 import { generateNameForFile } from "../utils/random.js";
 
-const productManager = new ProductManager();
+const productService = new ProductService();
 let serverSocket = null;
 
 // Configura el servidor Socket
@@ -19,7 +19,7 @@ export const config = (serverHTTP) => {
 
     // Escucha el evento de conexión de un nuevo socket
     serverSocket.on("connection", async (socket) => {
-        const response = await productManager.getAll({ limit: 100 });
+        const response = await productService.getAll({ limit: 100 });
         console.log("Socket connected");
 
         // Envía la lista de productos al cliente que se conecta
@@ -31,8 +31,8 @@ export const config = (serverHTTP) => {
                 const filename = generateNameForFile(data.file.name);
                 await writeFile(paths.images, filename, data.file.buffer);
 
-                await productManager.insertOne(data, filename);
-                const response = await productManager.getAll({ limit: 100 });
+                await productService.insertOne(data, filename);
+                const response = await productService.getAll({ limit: 100 });
 
                 // Envía la lista de productos actualizada después de insertar
                 serverSocket.emit("products-list", response);
@@ -41,8 +41,8 @@ export const config = (serverHTTP) => {
 
         // Escucha el evento para eliminar un producto
         socket.on("delete-product", async (data) => {
-            await productManager.deleteOneById(data.id);
-            const response = await productManager.getAll({ limit: 100 });
+            await productService.deleteOneById(data.id);
+            const response = await productService.getAll({ limit: 100 });
 
             // Envía la lista de productos actualizada después de eliminar
             serverSocket.emit("products-list", response);
@@ -52,7 +52,7 @@ export const config = (serverHTTP) => {
 
 // Función para actualizar la lista de productos
 export const updateProductsList = async () => {
-    const response = await productManager.getAll({ limit: 100 });
+    const response = await productService.getAll({ limit: 100 });
 
     // Envía la lista de productos actualizada
     serverSocket.emit("products-list", { response });

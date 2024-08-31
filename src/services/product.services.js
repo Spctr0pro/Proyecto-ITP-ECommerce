@@ -1,44 +1,48 @@
 import { ERROR_NOT_FOUND_ID } from "../constants/messages.constant.js";
-import ProductDAO from "../daos/product.dao.js"
+import ProductRepository from "../repositories/product.repository.js";
 
 export default class ProductService{
-    #ProductDAO;
+    #ProductRepository;
 
     constructor(){
-        this.#ProductDAO = new ProductDAO();
+        this.#ProductRepository = new ProductRepository();
     }
-
-    async findAll(paramFilters){
-        const paginationOptions = {
-                limit: paramFilters?.limit ?? 10,
-                page: paramFilters?.page ?? 1,
-                populate: "products.product",
-                lean: true,
-            };
-        
-        const products = await this.#ProductDAO.findAll(paginationOptions);
-        return products;
+    // Obtener todos los productos aplicando filtros
+    async getAll(params){
+        return await this.#ProductRepository.findAll(params);
     }
-
-    async findOneById(id){
-        const product = await this.#ProductDAO.findOneById(id);
+    // Obtener un producto por su ID
+    async getOneById(id){
+        const product = await this.#ProductRepository.findOneById(id);
         if(!product) throw new Error(ERROR_NOT_FOUND_ID);
         return product;
     }
-
+    // Crear un nuevo producto
     async insertOne(data){
-        return await this.#ProductDAO.save(data);
+        return await this.#ProductRepository.save(data);
     }
-
+    // Actualizar un producto existente
     async updateOneById(id, data){
-        const product = await this.findOneById(id);
-        const newValues = { ...product, ...data};
-        return await this.#ProductDAO.save(newValues);
-    }
+        const currentProduct = await this.#ProductRepository.findOneById(id);
+        const currentThumbnail = currentProduct.thumbnail;
+        const newThumbnail = filename;
 
+        const product = await this.#ProductRepository.save({
+            ...currentProduct,
+            ...data,
+            thumbnail: newThumbnail ?? currentThumbnail,
+        });
+
+        if (filename && newThumbnail !== currentThumbnail) {
+            await deleteFile(paths.images, currentThumbnail);
+        }
+
+        return product;
+    }
+    // Eliminar un producto por su ID
     async deleteOneById(id){
-        const product = await this.#ProductDAO.findOneById(id);
-        await await this.#ProductDAO.deleteOneById(id);
+        const product = await this.#ProductRepository.findOneById(id);
+        await await this.#ProductRepository.deleteOneById(id);
         return product;
     }
 }

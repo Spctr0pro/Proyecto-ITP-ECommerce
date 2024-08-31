@@ -1,20 +1,25 @@
-import FsDAO from "./fs/fs.dao.js";
-import MemoryDAO from "./memory/memory.dao.js";
 import MongoDAO from "./mongodb/mongo.dao.js";
-import Pet from "./mongodb/models/pet.model.js";
-import { FILE_SYSTEM_CART, FILE_SYSTEM_PRODUCT, MEMORY, MONGODB } from "../constants/dao.constant.js";
+import { MONGODB } from "../constants/dao.constant.js";
+import Product from "./mongodb/models/product.model.js";
+import Cart from "./mongodb/models/cart.model.js";
+import User from "./mongodb/models/user.model.js";
 
 export default class FactoryDAO {
-    createPet(className) {
-        switch (className) {
-        case FILE_SYSTEM_CART:
-            return new FsDAO("cart.json");
-        case FILE_SYSTEM_PRODUCT:
-            return new FsDAO("product.json");
-        case MEMORY:
-            return new MemoryDAO();
-        case MONGODB:
-            return new MongoDAO(Pet);
+    createProduct(className) {
+        if (className === MONGODB) {
+            return new MongoDAO(Product);
+        }
+    }
+
+    createCart(className) {
+        if (className === MONGODB) {
+            return new MongoDAO(Cart);
+        }
+    }
+
+    createUser(className) {
+        if (className === MONGODB) {
+            return new MongoDAO(User);
         }
     }
 }

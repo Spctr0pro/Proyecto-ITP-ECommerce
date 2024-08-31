@@ -1,4 +1,5 @@
 import { Router } from "express";
+import mongoose from "mongoose";
 import { ERROR_INVALID_ID, ERROR_NOT_HAVE_PRIVILEGES, STATUS_CODES } from "../constants/messages.constant.js";
 import { checkAuth } from "../middlewares/auth.middleware.js";
 
@@ -24,13 +25,19 @@ export default class BaseRouter {
         this.#router.use((req, res, next) => {
             res.sendSuccess200 = (payload) => res.status(200).json({ status: true, payload });
             res.sendSuccess201 = (payload) => res.status(201).json({ status: true, payload });
-            res.sendError = (error) => this.#defineErrorResponse(error.message, res);
+            res.sendError = (error) => this.#defineErrorResponse(error, res);
             next();
         });
     }
 
     // Método privado: Configura la respuesta de error basada en el mensaje de error
-    #defineErrorResponse(errorMessage, res) {
+    #defineErrorResponse(error, res) {
+        let errorMessage = error.message;
+
+        if (error instanceof mongoose.Error.ValidationError) {
+            errorMessage = Object.values(error.errors)[0].message;
+        }
+
         const statusCode = this.#statusCodes[errorMessage] || 500;
         res.status(statusCode).json({ status: false, message: errorMessage });
     }
@@ -40,8 +47,8 @@ export default class BaseRouter {
         const pattern = /^[0-9a-fA-F]{24}$/;
 
         this.#router.param("id", this.#validatePathParam(pattern, ERROR_INVALID_ID));
-        this.#router.param("rid", this.#validatePathParam(pattern, ERROR_INVALID_ID));
-        this.#router.param("iid", this.#validatePathParam(pattern, ERROR_INVALID_ID));
+        this.#router.param("cid", this.#validatePathParam(pattern, ERROR_INVALID_ID));
+        this.#router.param("pid", this.#validatePathParam(pattern, ERROR_INVALID_ID));
     }
 
     // Método privado: Valida un parámetro de ruta según el patrón dado
@@ -56,9 +63,9 @@ export default class BaseRouter {
 
     // Método privado: Verifica si el rol del usuario cumple con las políticas requeridas
     #checkPolicy(policies = []) {
-        // Si no hay políticas especificadas, permite el acceso sin restricciones      
+        // Si no hay políticas especificadas, permite el acceso sin restricciones
         if (policies.length === 0) return [];
-        
+
         // Retorna un array de middlewares que se aplicarán a la ruta
         return [ checkAuth, (req, res, next) => {
             // Verifica si alguno de los roles requeridos está presente en los roles del usuario

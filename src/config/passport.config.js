@@ -1,8 +1,8 @@
 import passport from "passport";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
-import UserManager from "../daos/user.dao.js";
+import UserService from "../services/user.services.js";
 
-const userManager = new UserManager();
+const userService = new UserService();
 
 export const config = (server) => {
     // Opciones para la estrategia JWT basada en el encabezado Authorization
@@ -11,18 +11,25 @@ export const config = (server) => {
         secretOrKey: process.env.SECRET_KEY,
     };
 
+    // Opciones para la estrategia JWT basada en una cookie llamada "token"
+    const jwtCookieOptions = {
+        jwtFromRequest: (req) => req.cookies ? req.cookies["token"] : null,
+        secretOrKey: process.env.SECRET_KEY ?? "dsafdsf",
+    };
+
     // Función que maneja el inicio de sesión
     const handleLogin = async (payload, done) => {
         try {
-            const userFound = await userManager.getOneById(payload.id);
+            const userFound = await userService.findOneById(payload.id);
             return done(null, userFound);
         } catch (error) {
             return done(null, false, { message: error.message });
         }
     };
-
+    
     // Configura las estrategias JWT para Passport
-    passport.use("jwt-api", new JwtStrategy(jwtApiOptions, handleLogin));
+    //passport.use("jwt-api", new JwtStrategy(jwtApiOptions, handleLogin));
+    passport.use("jwt-cookie", new JwtStrategy(jwtCookieOptions, handleLogin));
 
     // Inicializa Passport en el servidor
     server.use(passport.initialize());

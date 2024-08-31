@@ -1,5 +1,6 @@
 import BaseRouter from "../base.router.js";
 import UserController from "../../controllers/user.controller.js";
+import { ADMIN, STANDARD } from "../../constants/roles.constant.js";
 
 export default class UserRouter extends BaseRouter{
     #userController;
@@ -12,11 +13,11 @@ export default class UserRouter extends BaseRouter{
     initialize(){
         const router = this.getRouter();
 
-        router.get("/", (req, res) => this.#userController.getAll(req, res));
-        router.get("/:id", (req, res) => this.#userController.getOneById(req, res));
-        router.post("/", (req, res) => this.#userController.create(req, res));
-        router.put("/:id", (req, res) => this.#userController.update(req, res));
-        router.delete("/:id", (req, res) => this.#userController.delete(req, res));
+        this.addGetRoute("/", [STANDARD], (req, res) => this.#userController.getAll(req, res));
+        this.addGetRoute("/:id", [STANDARD],  (req, res) => this.#userController.getOneById(req, res));
+        this.addPostRoute("/", [],  (req, res) => this.#userController.create(req, res));
+        this.addPutRoute("/:id", [ADMIN], (req, res) => this.#userController.update(req, res));
+        this.addDeleteRoute("/:id", [ADMIN],  (req, res) => this.#userController.delete(req, res));
 
         router.use((error, req, res, next) => {
             res.sendError(error);

@@ -2,24 +2,28 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import paths from "./utils/paths.js";
 
-import { config as dotenvConfig } from "dotenv";
-import { connectDB } from "./config/mongoose.config.js";
+import { config as configDotenv } from "./config/dotenv.config.js";
 import { config as configHandlebars } from "./config/handlebars.config.js";
-import { config as configPassport } from "./config/passport.config.js";
 import { config as configSocket } from "./config/socket.config.js";
+import { config as configPassport } from "./config/passport.config.js";
+import { config as configCORS } from "./config/cors.config.js";
+import { connectDB } from "./config/mongoose.config.js";
 
-// import LoginRouter from "./routes/login.routes.js";
-// import ProductRouter from "./routes/products.routes.js";
-import ApiUserRouter from "./routers/api/user.router.js";
-import ApiAuthRouter from "./routes/api/auth.routes.js";
-// import CartRouter from "./routes/carts.routes.js";
+import apiAuthRouter from "./routers/api/auth.routes.js";
+import apiSessionRouter from "./routers/api/session.router.js";
+import apiCartRouter from "./routers/api/cart.router.js";
+import apiProductRouter from "./routers/api/product.router.js";
+import apiUserRouter from "./routers/api/user.router.js";
 
-// import ApiCartRouter from "./routes/api/cart.routes.js";
-import ApiCartRouter from "./routers/api/cart.router.js";
-import ApiProductRouter from "./routers/api/product.router.js";
-// import HomeRouter from "./routes/home.routes.js";
+import CartViewRouter from "./routers/carts.view.router.js";
+import ProductViewRouter from "./routers/products.view.router.js";
+import HomeViewRouter from "./routers/home.view.router.js";
+import LoginViewRouter from "./routers/login.view.router.js";
 
 const server = express();
+configDotenv(paths);
+connectDB();
+
 // Decodificadores del BODY
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
@@ -30,9 +34,6 @@ server.use(cookieParser(process.env.SECRET_KEY));
 // Declaración de ruta estática
 server.use("/public", express.static(paths.public));
 
-// Variables de entorno
-dotenvConfig({ path: paths.env });
-
 // Motor de plantillas
 configHandlebars(server);
 
@@ -40,19 +41,21 @@ configHandlebars(server);
 configPassport(server);
 
 // Conexión con la Base de Datos
-connectDB();
 
-// Enrutadores
-// server.use("/session", new LoginRouter().getRouter())
-// server.use("/products", new ProductRouter().getRouter());
-// server.use("/carts", new CartRouter().getRouter());
-// server.use("/", new HomeRouter().getRouter());
+console.log(process.env.FRONTEND_HOST);
 
-server.use("/api/auth", new ApiAuthRouter().getRouter());
-server.use("/api/carts", new ApiCartRouter().getRouter());
-server.use("/api/products", new ApiProductRouter().getRouter());
-server.use("/api/users", new ApiUserRouter().getRouter());
+configCORS(server);
 
+server.use("/login", new LoginViewRouter().getRouter());
+server.use("/products", new ProductViewRouter().getRouter());
+server.use("/carts", new CartViewRouter().getRouter());
+server.use("/", new HomeViewRouter().getRouter());
+
+server.use("/api/auth", new apiAuthRouter().getRouter());
+server.use("/api/carts", new apiCartRouter().getRouter());
+server.use("/api/products", new apiProductRouter().getRouter());
+server.use("/api/sessions", new apiSessionRouter().getRouter());
+server.use("/api/users", new apiUserRouter().getRouter());
 
 // Control de rutas inexistentes
 server.use("*", (req, res) => {

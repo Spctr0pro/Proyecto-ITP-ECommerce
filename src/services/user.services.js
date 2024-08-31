@@ -1,43 +1,46 @@
-import { ERROR_NOT_FOUND_ID } from "../constants/messages.constant.js";
-import UserDAO from "../daos/user.dao.js"
+import UserRepository from "../repositories/user.repository.js";
 
-export default class UserService{
-    #UserDAO;
+export default class UserService {
+    #userRepository;
 
-    constructor(){
-        this.#UserDAO = new UserDAO();
+    constructor() {
+        this.#userRepository = new UserRepository();
     }
 
-    async findAll(paramFilters){
-        const paginationOptions = {
-                limit: paramFilters?.limit ?? 10,
-                page: paramFilters?.page ?? 1,
-                lean: true,
-            };
-        
-        const users = await this.#UserDAO.findAll(paginationOptions);
-        return users;
+    // Obtener todos los usuarios aplicando filtros
+    async getAll(paramFilters) {
+        const $and = [];
+
+        if (paramFilters?.name) $and.push({ name: { $regex: paramFilters.name, $options: "i" } });
+        const filters = $and.length > 0 ? { $and } : {};
+
+        return await this.#userRepository.findAll(filters);
     }
 
-    async findOneById(id){
-        const user = await this.#UserDAO.findOneById(id);
-        if(!user) throw new Error(ERROR_NOT_FOUND_ID);
-        return user;
+    // Obtener un usuario por su ID
+    async findOneById(id) {
+        return await this.#userRepository.findOneById(id);
     }
 
-    async insertOne(data){
-        return await this.#UserDAO.save(data);
+    // Obtener un usuario por su email y contraseña
+    async findOneByEmailAndPassword(email, password) {
+        return await this.#userRepository.findOneByEmailAndPassword(email, password);
     }
 
-    async updateOneById(id, data){
-        const user = await this.findOneById(id);
-        const newValues = { ...user, ...data};
-        return await this.#UserDAO.save(newValues);
+    // Crear un nuevo usuario
+    async insertOne(data) {
+        return await this.#userRepository.save(data);
     }
 
-    async deleteOneById(id){
-        const user = await this.#UserDAO.findOneById(id);
-        await await this.#UserDAO.deleteOneById(id);
-        return user;
+    // Actualizar un usuario existente
+    async updateOneById(id, data) {
+        const user = await this.#userRepository.findOneById(id);
+        const newValues = { ...user, ...data };
+        return await this.#userRepository.save(newValues);
+    }
+
+    // Eliminar un usuario por su ID
+    async deleteOneById(id) {
+        return await this.#userRepository.deleteOneById(id);
     }
 }

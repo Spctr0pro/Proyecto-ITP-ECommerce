@@ -9,19 +9,21 @@ export default class PetRepository {
 
     constructor() {
         const factory = new FactoryDAO(); // Uso del patrón "Factory Method"
-        this.#cartDAO = factory.createPet(MONGODB); // Puede emplear las constantes MEMORY o MONGODB
+        this.#cartDAO = factory.createCart(MONGODB); // Puede emplear las constantes MEMORY o MONGODB
         this.#cartDTO = new cartDTO();
     }
 
-    // Obtener todas las mascotas aplicando filtros
-    async findAll(filters) {
-        const carts = await this.#cartDAO.findAll(filters);
-        const cartsDTO = pets.map((pet) => this.#cartDTO.fromModel(pet));
+    // Obtener todos los carritos aplicando filtros
+    async findAll(params) {
+        params.populate = "products.product";
 
+        const carts = await this.#cartDAO.findAll({}, params);
+        const cartsDTO = carts?.docs?.map((cart) => this.#cartDTO.fromModel(cart));
+        carts.docs = cartsDTO;
         return cartsDTO;
     }
 
-    // Obtener una mascota por su ID
+    // Obtener un carrito por su ID
     async findOneById(id) {
         const cart = await this.#cartDAO.findOneById(id);
         if (!cart) throw new Error(ERROR_NOT_FOUND_ID);
@@ -29,14 +31,14 @@ export default class PetRepository {
         return this.#cartDTO.fromModel(cart);
     }
 
-    // Crear una nueva mascota
+    // Crear un nuevo carrito
     async save(data) {
         const cartDTO = this.#cartDTO.fromData(data);
         const cart = await this.#cartDAO.save(cartDTO);
         return this.#cartDTO.fromModel(cart);
     }
 
-    // Eliminar una mascota por su ID
+    // Eliminar un carrito por su ID
     async deleteOneById(id) {
         const cart = await this.findOneById(id);
         await this.#cartDAO.deleteOneById(id);

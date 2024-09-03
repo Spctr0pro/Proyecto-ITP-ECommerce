@@ -54,8 +54,6 @@ export default class HomeViewRouter extends BaseRouter {
         try {
             res.status(200).render("realTimeProducts", { title: "Tiempo Real" });
         } catch (error) {
-            console.log("Entro");
-            
             res.status(500).json({ status: false, ERROR_SERVER });
         }
     }

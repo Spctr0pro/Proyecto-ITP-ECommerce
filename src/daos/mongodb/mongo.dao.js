@@ -1,6 +1,4 @@
 // Conexión con la Base de Datos
-import { connectDB } from "../../config/mongoose.config.js";
-
 export default class MongoDAO {
     static #connectionDB = false;
     #model;
@@ -38,13 +36,15 @@ export default class MongoDAO {
     }
 
     // Guarda los datos de un documento
-    async save(data) {
+    async save(data) {    
+        let object;   
         if (data.id) {
-            return await this.#model.findByIdAndUpdate(data.id, data, { runValidators: true });
+            object = await this.#model.findById(data.id);
+            object.set(data);
         } else {
-            const object = new this.#model(data);
-            return await object.save();
+            object = new this.#model(data);
         }
+    return await object.save();
     }
 
     // Eliminar un documento por su ID

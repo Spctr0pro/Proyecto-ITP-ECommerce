@@ -9,7 +9,7 @@ export default class ProductController{
     // Obtener todos los productos
     async getAll(req, res){
         try{
-            const products = await this.#productService.getOneById(req.params);
+            const products = await this.#productService.getAll(req.params);
             res.sendSuccess200(products);
         }catch(error){
             res.sendError(error);
@@ -27,7 +27,9 @@ export default class ProductController{
     // Crear un nuevo producto
     async create(req, res){
         try{
-            const product = await this.#productService.insertOne(req.body);
+            const { file } = req;
+            
+            const product = await this.#productService.insertOne(req.body, file?.filename);
             res.sendSuccess201(product);
         }catch(error){
             res.sendError(error);
@@ -36,7 +38,8 @@ export default class ProductController{
     // Actualizar un producto existente
     async update(req, res){
         try{
-            const product = await this.#productService.updateOneById(req.params.id, req.body);
+            const { file } = req;
+            const product = await this.#productService.updateOneById(req.params.id, req.body, file?.filename);
             res.sendSuccess200(product);
         }catch(error){
             res.sendError(error);

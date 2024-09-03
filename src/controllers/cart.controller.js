@@ -1,53 +1,58 @@
 import CartService from "../services/cart.services.js";
 
-export default class CartController{
+export default class CartController {
     #cartService;
 
-    constructor(){
+    constructor() {
         this.#cartService = new CartService();
     }
     // Obtener todos los carritos
-    async getAll(req, res){
-        try{
+    async getAll(req, res) {
+        try {
             const carts = await this.#cartService.getAll(req.params);
             res.sendSuccess200(carts);
-        }catch(error){
+        } catch (error) {
             res.sendError(error);
         }
     }
     // Obtener un carrito por su ID
-    async getOneById(req, res){
-        try{
-            const cart = await this.#cartService.findOneById(req.params.id);
+    async getOneById(req, res) {
+        try {
+            const cart = await this.#cartService.getOneById(req.params.id);
             res.sendSuccess200(cart);
-        }catch(error){
+        } catch (error) {
             res.sendError(error);
         }
     }
     // Crear un nuevo carrito
-    async create(req, res){
-        try{
-            const cart = await this.#cartService.insertOne(req.body);
+    async create(req, res) {
+        try {
+
+            const data = JSON.stringify(req.body);
+            const cart = await this.#cartService.insertOne({
+                data,
+                purchaser: req.id,
+            });
             res.sendSuccess201(cart);
-        }catch(error){
+        } catch (error) {
             res.sendError(error);
         }
     }
     // Actualizar un carrito existente
-    async update(req, res){
-        try{
+    async update(req, res) {
+        try {
             const cart = await this.#cartService.updateOneById(req.params.id, req.body);
             res.sendSuccess200(cart);
-        }catch(error){
+        } catch (error) {
             res.sendError(error);
         }
     }
     // Eliminar un carrito por su ID
-    async delete(req, res){
-        try{
+    async delete(req, res) {
+        try {
             const cart = await this.#cartService.deleteOneById(req.params.id);
             res.sendSuccess200(cart);
-        }catch(error){
+        } catch (error) {
             res.sendError(error);
         }
     }

@@ -29,7 +29,7 @@ export default class CartService {
     }
     // Actualizar un carrito existente
     async updateOneById(id, data) {
-        const cart = await this.findOneById(id);
+        const cart = await this.#cartRepository.findOneById(id);
         const newValues = { ...cart, ...data };
         return await this.#cartRepository.save(newValues);
     }

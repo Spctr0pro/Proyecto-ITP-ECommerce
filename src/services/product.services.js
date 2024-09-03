@@ -1,5 +1,8 @@
 import { ERROR_NOT_FOUND_ID } from "../constants/messages.constant.js";
 import ProductRepository from "../repositories/product.repository.js";
+import { convertToBoolean } from "../utils/converter.js";
+import { deleteFile } from "../utils/fileSystem.js";
+import paths from "../utils/paths.js";
 
 export default class ProductService{
     #ProductRepository;
@@ -18,20 +21,31 @@ export default class ProductService{
         return product;
     }
     // Crear un nuevo producto
-    async insertOne(data){
-        return await this.#ProductRepository.save(data);
+    async insertOne(data, filename){
+        const newThumbnail = filename;
+
+        const product = {
+            ...data,
+            thumbnail: newThumbnail ?? "",
+        };
+
+        return await this.#ProductRepository.save(product);
     }
     // Actualizar un producto existente
-    async updateOneById(id, data){
+    async updateOneById(id, data, filename){
         const currentProduct = await this.#ProductRepository.findOneById(id);
         const currentThumbnail = currentProduct.thumbnail;
         const newThumbnail = filename;
 
-        const product = await this.#ProductRepository.save({
-            ...currentProduct,
-            ...data,
-            thumbnail: newThumbnail ?? currentThumbnail,
-        });
+        const newValues = {
+                ...currentProduct,
+                ...data,
+                status: convertToBoolean(data.status),
+                availability: convertToBoolean(data.availability),
+                thumbnail: newThumbnail ?? currentThumbnail,
+        };
+        
+        const product = await this.#ProductRepository.save(newValues);
 
         if (filename && newThumbnail !== currentThumbnail) {
             await deleteFile(paths.images, currentThumbnail);

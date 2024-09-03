@@ -3,7 +3,7 @@ import cartDTO from "../dtos/cart.dto.js";
 import { MONGODB } from "../constants/dao.constant.js";
 import { ERROR_NOT_FOUND_ID } from "../constants/messages.constant.js";
 
-export default class PetRepository {
+export default class CartRepository {
     #cartDAO;
     #cartDTO;
 

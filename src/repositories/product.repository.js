@@ -19,7 +19,6 @@ export default class ProductRepository {
 
         if (params?.title) $and.push({ title: { $regex: params.title, $options: "i" } });
         const filters = $and.length > 0 ? { $and } : {};
-
         const products = await this.#productDAO.findAll(filters, params);
         const productsDTO = products?.docs?.map((product) => this.#productDTO.fromModel(product));
         products.docs = productsDTO;
@@ -37,8 +36,9 @@ export default class ProductRepository {
 
     // Crear o actualizar un producto
     async save(data) {
-        const productDAO = this.#productDAO.fromData(data);
+        const productDAO = this.#productDTO.fromData(data);
         const product = await this.#productDAO.save(productDAO);
+        console.log(product);
         return this.#productDTO.fromModel(product);
     }
 

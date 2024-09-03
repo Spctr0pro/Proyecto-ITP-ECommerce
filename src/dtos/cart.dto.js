@@ -3,6 +3,7 @@ export default class CartDTO {
         return {
             id: model.id,
             products: model.products,
+            purchaser: model.purchaser,
         };
     }
 
@@ -10,6 +11,7 @@ export default class CartDTO {
         return {
             id: data.id || null,
             products: data.products,
+            purchaser: data.purchaser,
         };
     }
 }

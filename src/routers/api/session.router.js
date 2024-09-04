@@ -1,10 +1,14 @@
 import BaseRouter from "../base.router.js";
 import { generateToken } from "../../middlewares/auth.middleware.js";
-import { STANDARD } from "../../constants/roles.constant.js";
+import { USER } from "../../constants/roles.constant.js";
+import UserController from "../../controllers/user.controller.js";
 
 export default class SessionRouter extends BaseRouter {
+    #userController;
+
     constructor() {
         super();
+        this.#userController = new UserController();
     }
 
     initialize() {
@@ -12,7 +16,7 @@ export default class SessionRouter extends BaseRouter {
 
         // Define las rutas y asocia las funciones correspondientes
         this.addPostRoute("/login", [], generateToken, (req, res) => this.#login(req, res));
-        this.addGetRoute("/current", [STANDARD], (req, res) => this.#getCurrentUser(req, res));
+        this.addGetRoute("/current", [USER], (req, res) => this.#userController.getOneById(req, res));
 
         // Middleware para manejar errores
         // eslint-disable-next-line no-unused-vars
@@ -36,17 +40,17 @@ export default class SessionRouter extends BaseRouter {
     }
 
     // Maneja la solicitud GET para obtener el usuario autenticado
-    #getCurrentUser(req, res) {
-        try {
-            const currentUser = {
-                id: req.id,
-                roles: req.roles,
-                email: req.email,
-            };
+    // #getCurrentUser(req, res) {
+    //     try {
+    //         const currentUser = {
+    //             id: req.id,
+    //             roles: req.roles,
+    //             email: req.email,
+    //         };
 
-            res.sendSuccess200(currentUser);
-        } catch (error) {
-            res.sendError(error);
-        }
-    }
+    //         res.sendSuccess200(currentUser);
+    //     } catch (error) {
+    //         res.sendError(error);
+    //     }
+    // }
 }

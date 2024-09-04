@@ -34,8 +34,8 @@ export default class PRODUCTDAO{
     }
 
     async save(data){
-        const cart = new ProductModel(data);
-        return await cart.save();
+        const product = new ProductModel(data);
+        return await product.save();
     }
 
     async deleteOneById(id){

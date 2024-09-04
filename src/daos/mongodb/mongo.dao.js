@@ -21,7 +21,7 @@ export default class MongoDAO {
             populate: params?.populate ?? "",
             lean: true,
         };
-        
+
         return await this.#model.paginate(filters, paginationOptions);
     }
 
@@ -29,22 +29,22 @@ export default class MongoDAO {
     async findOneById(id) {
         return await this.#model.findOne({ _id: id });
     }
-    
+
     // Buscar un documento por un criterio
     async findOneByCriteria(criteria) {
         return await this.#model.findOne(criteria);
     }
 
     // Guarda los datos de un documento
-    async save(data) {    
-        let object;   
+    async save(data) {
+        let object;
         if (data.id) {
             object = await this.#model.findById(data.id);
             object.set(data);
         } else {
             object = new this.#model(data);
         }
-    return await object.save();
+        return await object.save();
     }
 
     // Eliminar un documento por su ID

@@ -17,8 +17,8 @@ export default class TICKETDAO{
     }
 
     async save(data){
-        const cart = new CartModel(data);
-        return await cart.save();
+        const ticket = new TicketModel(data);
+        return await this.#TicketModel.save(data);
     }
 
     async deleteOneById(id){

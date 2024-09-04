@@ -18,7 +18,7 @@ export default class UserController{
     // Obtener un usuario por su ID
     async getOneById(req, res){
         try{
-            const user = await this.#userService.findOneById(req.params.id);
+            const user = await this.#userService.findOneById(req.params.id ?? req.id);
             res.sendSuccess200(user);
         }catch(error){
             res.sendError(error);

@@ -4,7 +4,7 @@ export default class UserDTO {
     fromModel(model) {
         return {
             id: model.id,
-            fullName: `${model.name} ${model.surname}`,
+            fullName: `${model.first_name} ${model.last_name}`,
             email: model.email,
             roles: model.roles,
         };

@@ -38,7 +38,6 @@ export default class ProductRepository {
     async save(data) {
         const productDAO = this.#productDTO.fromData(data);
         const product = await this.#productDAO.save(productDAO);
-        console.log(product);
         return this.#productDTO.fromModel(product);
     }
 

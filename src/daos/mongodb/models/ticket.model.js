@@ -5,8 +5,6 @@ const ticketSchema = new Schema({
     code: {
         type: String,
         required: [ true, "El código es obligatorio" ],
-        uppercase: true,
-        trim: true,
         unique: true,
     },
     amount: {

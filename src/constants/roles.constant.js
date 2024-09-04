@@ -1,5 +1,5 @@
-export const STANDARD = "STANDARD" ;
+//export const STANDARD = "STANDARD" ;
 export const USER = "USER" ;
 export const ADMIN = "ADMIN" ;
 
-export const ROLES = [ STANDARD, USER, ADMIN ];
+export const ROLES = [ USER, ADMIN ];

@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 import paginate from "mongoose-paginate-v2";
-import { STANDARD, ROLES } from "../../../constants/roles.constant.js";
+import { ROLES, USER } from "../../../constants/roles.constant.js";
 
 const userSchema = new Schema({
     first_name: {
@@ -55,7 +55,7 @@ const userSchema = new Schema({
             values: ROLES,
             message: "Rol no válido",
         },
-        default: [STANDARD],
+        default: [USER],
     },
 }, {
     timestamps: true, // Añade timestamps para generar createdAt y updatedAt

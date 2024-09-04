@@ -9,7 +9,7 @@ export default class TicketRepository {
 
     constructor() {
         const factory = new FactoryDAO(); // Uso del patrón "Factory Method"
-        this.#ticketDAO = factory.createCart(MONGODB); // Puede emplear las constantes MEMORY o MONGODB
+        this.#ticketDAO = factory.createTicket(MONGODB); // Puede emplear las constantes MEMORY o MONGODB
         this.#ticketDTO = new ticketDTO();
     }
 

@@ -1,4 +1,4 @@
-import { ERROR_NOT_FOUND_ID } from "../constants/messages.constant.js";
+import { ERROR_NOT_FOUND_ID, ERROR_NOT_FOUND_INDEX } from "../constants/messages.constant.js";
 import CartRepository from "../repositories/cart.repository.js";
 
 export default class CartService {
@@ -58,8 +58,9 @@ export default class CartService {
     // Elimina un producto de un carrito o decrementa la cantidad de un producto existente
     async removeOneProduct(id, productId, quantity = 0) {
         const product = await this.#cartRepository.findOneById(id);
-
+        
         const productIndex = product.products.findIndex((item) => item.product.toString() === productId);
+        
         if (productIndex < 0) {
             throw new Error(ERROR_NOT_FOUND_INDEX);
         }

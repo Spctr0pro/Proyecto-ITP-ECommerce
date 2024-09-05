@@ -32,14 +32,19 @@ export const generateToken = async (req, res, next) => {
 // Middleware para verificar la autenticación del usuario
 export const checkAuth = (req, res, next) => {
     // Determina la estrategia de autenticación JWT según la presencia del token en las cookies
+    
     const jwtStrategy = req.cookies["token"] ? "jwt-cookie" : "jwt-header";
-
+    if(!req.cookies["token"]){
+        return next(new Error("Usuario no autenticado"));
+    }
     // Autentica al usuario utilizando la estrategia proporcionada por Passport
     passport.authenticate(jwtStrategy, { session: false }, (error, user, info) => {
+    
         if (error) return next(error);
 
         // Si el usuario no se ha autenticado, retorna un mensaje de error 401
         if (!user) {
+            
             return next(new Error(JWT_TRANSLATIONS[info.message] ?? info.message));
         }
 

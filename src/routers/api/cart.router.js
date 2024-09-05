@@ -28,7 +28,7 @@ export default class CartRouter extends BaseRouter{
         this.addDeleteRoute("/:cid/products", [USER], (req, res) => this.#cartController.removeAllProducts(req, res)); 
                 
         router.use((error, req, res, next) => {
-            res.sendError(error);
+                res.sendError(error);
         })
     }
 }

@@ -28,9 +28,10 @@ export default class CartController {
     async create(req, res) {
         try {
 
-            const data = JSON.stringify(req.body);
+            const data = req.body;
+            
             const cart = await this.#cartService.insertOne({
-                data,
+                ...data,
                 purchaser: req.id,
             });
             res.sendSuccess201(cart);

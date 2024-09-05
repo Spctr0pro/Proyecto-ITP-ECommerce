@@ -11,12 +11,14 @@ export default class UserDTO {
     }
 
     fromData(data) {
+        data.fullName = data.first_name + ' ' + data.last_name; 
         const name = data.fullName?.split(" ");
 
         return {
             id: data.id || null,
-            name: name[0] ?? "",
-            surname: name[1] ?? "",
+            first_name: name[0] ?? "",
+            last_name: name[1] ?? "",
+            age: data.age,
             email: data.email,
             password: data.password ? createHash(data.password) : null,
             roles: data.roles,

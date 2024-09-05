@@ -14,11 +14,12 @@ export const validaTicket = async (req, res, next) => {
         let productsOutStock = [];
         let productsWithAvailableStock = [];
         req.products = [];
+        req.productsWithoutStock = [];
         for (var i = 0; i < cartFound.products.length; i++) {
             productFound = await productService.getOneById(cartFound.products[i].product);
             amount += cartFound.products[i].quantity * productFound.price;
             if (productFound.stock < cartFound.products[i].quantity) {
-                productsOutStock.push(productFound);
+                productsOutStock.push(productFound.id);
             }else{
                 productFound.stock -= cartFound.products[i].quantity;
                 productFound.availability = !productFound.stock == 0;
@@ -27,7 +28,7 @@ export const validaTicket = async (req, res, next) => {
         }
 
         if (productsOutStock.length > 0) {
-            throw new Error(`La siguiente cantidad de productos supera el stock disponible (${productsOutStock.length})`);
+            throw new Error(`El o los siguientes producto(s) superan la cantidad de stock disponible (${productsOutStock.toString()})`);
         }
 
         // Coloca el amount en el request
